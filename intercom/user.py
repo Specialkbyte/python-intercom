@@ -49,7 +49,7 @@ class User(UserId):
 
     attributes = (
         'user_id', 'email', 'name', 'created_at', 'custom_data',
-        'last_seen_ip', 'last_seen_user_agent')
+        'last_seen_ip', 'last_seen_user_agent', 'companies')
 
     @classmethod
     def find(cls, user_id=None, email=None):
@@ -301,6 +301,24 @@ class User(UserId):
             custom_data = CustomData(custom_data)
         self['custom_data'] = custom_data
 
+    @property
+    def companies(self):
+        """ Returns a list of companies that this user belongs to
+        There is no Intercom API end point at present that returns 
+        this data to us so calling this method will not return data 
+        from Intercom.
+        """
+        company_list = dict.get(self, 'companies', None)
+        if not isinstance(company_list, list):
+            company_list = list()
+            dict.__setitem__(self, 'companies', company_list)
+
+        return company_list
+
+    @companies.setter
+    def companies(self, company_list):
+        self['companies'] = company_list
+
 
 class CustomData(dict):
     """ A dict that limits keys to strings, and values to real numbers
@@ -437,3 +455,62 @@ class LocationData(dict):
     def __setitem__(self, key, value):
         """ Do not allow items to be set. """
         raise NotImplementedError
+
+
+class Company(dict):
+    """ Object representing a company in which a user can belong
+
+    This object is both readable and writable but the Intercom API does
+    not return companies data on any API request so this data cannot get
+    pulled back from Intercom at present.
+    """
+
+    @property
+    def id(self):
+        return dict.get(self, 'id', None)
+
+    @id.setter
+    def id(self, value):
+        self['id'] = value
+
+    @property
+    def name(self):
+        """ Returns the Company's name e.g. Intercom """
+        return dict.get(self, 'name', None)
+
+    @name.setter
+    def name(self, name):
+        """ Sets the Company's name. """
+        self['name'] = name
+
+    @property
+    def monthly_spend(self):
+        """ Company's monthly spend """
+        return dict.get(self, 'monthly_spend', None)
+
+    @monthly_spend.setter
+    def monthly_spend(self, value):
+        """ Sets Company's monthly spend """
+        self['monthly_spend'] = value
+
+    @property
+    def plan(self):
+        """ Get Company's plan status """
+        return dict.get(self, 'plan', None)
+
+    @plan.setter
+    def plan(self, value):
+        """ Sets Company's plan status e.g. Messaging """
+        self['plan'] = value
+
+    @property
+    @from_timestamp_property
+    def created_at(self):
+        """ Returns the datetime this Company was created """
+        return dict.get(self, 'created_at', None)
+
+    @created_at.setter
+    @to_timestamp_property
+    def created_at(self, value):
+        """ Sets the timestamp when this Company was created """
+        self['created_at'] = value
