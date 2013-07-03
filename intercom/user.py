@@ -101,7 +101,8 @@ class User(UserId):
     @classmethod
     def create(
             cls, user_id=None, email=None, name=None, created_at=None,
-            custom_data=None, last_seen_ip=None, last_seen_user_agent=None):
+            custom_data=None, last_seen_ip=None, last_seen_user_agent=None,
+            companies=None):
         """ Create or update a user.
 
         >>> user = User.create(email="somebody@example.com")
@@ -112,7 +113,7 @@ class User(UserId):
         resp = Intercom.create_user(
             user_id=user_id, email=email, name=name, created_at=created_at,
             custom_data=custom_data, last_seen_ip=last_seen_ip,
-            last_seen_user_agent=last_seen_user_agent)
+            last_seen_user_agent=last_seen_user_agent, companies=companies)
         return cls(resp)
 
     @classmethod
