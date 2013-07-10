@@ -144,7 +144,7 @@ class Intercom(object):
     def create_user(
             cls, user_id=None, email=None, name=None, created_at=None,
             custom_data=None, last_seen_ip=None, last_seen_user_agent=None,
-            companies=None):
+            companies=[]):
         """ Create a user from the available parameters.
 
         >>> from datetime import datetime
@@ -169,7 +169,7 @@ class Intercom(object):
     def update_user(
             cls, user_id=None, email=None, name=None, created_at=None,
             custom_data=None, last_seen_ip=None, last_seen_user_agent=None,
-            companies=None):
+            companies=[]):
         """ Update a user with the available parameters.
 
         >>> user = Intercom.get_user(user_id='123')
